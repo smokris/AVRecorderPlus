@@ -47,6 +47,7 @@
 
 #import "AVRecorderDocument.h"
 #import <AVFoundation/AVFoundation.h>
+#import <CoreMediaIO/CMIOHardware.h>
 
 @interface AVRecorderDocument () <AVCaptureFileOutputDelegate, AVCaptureFileOutputRecordingDelegate>
 
@@ -73,7 +74,8 @@
 @synthesize videoDevices;
 @synthesize audioDevices;
 @synthesize session;
-@synthesize audioLevelMeter;
+@synthesize audioLevelMeterL;
+@synthesize audioLevelMeterR;
 @synthesize audioPreviewOutput;
 @synthesize movieFileOutput;
 @synthesize previewView;
@@ -203,7 +205,11 @@
 	[[self session] startRunning];
 	
 	// Start updating the audio level meter
-	[self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
+	[self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:1./30. target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
+	[[self audioPeakL] setFloatValue:-99];
+	[[self audioPeakR] setFloatValue:-99];
+	[self audioPeakL].doc = self;
+	[self audioPeakR].doc = self;
 }
 
 - (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void  *)contextInfo
@@ -214,6 +220,17 @@
 #pragma mark - Device selection
 - (void)refreshDevices
 {
+	CMIOObjectPropertyAddress   prop    = {
+		kCMIOHardwarePropertyAllowScreenCaptureDevices,
+		kCMIOObjectPropertyScopeGlobal,
+		kCMIOObjectPropertyElementMaster
+	};
+	UInt32                      allow   = 1;
+	OSStatus ret = CMIOObjectSetPropertyData(kCMIOObjectSystemObject, &prop, 0, NULL, sizeof(allow), &allow);
+	if (ret)
+		NSLog(@"ret=%d",ret);
+	
+	
 	[self setVideoDevices:[[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo] arrayByAddingObjectsFromArray:[AVCaptureDevice devicesWithMediaType:AVMediaTypeMuxed]]];
 	[self setAudioDevices:[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio]];
 	
@@ -437,12 +454,14 @@
 - (void)setRecording:(BOOL)record
 {
 	if (record) {
-		// Record to a temporary file, which the user will relocate when recording is finished
-		char *tempNameBytes = tempnam([NSTemporaryDirectory() fileSystemRepresentation], "AVRecorder_");
-		NSString *tempName = [[[NSString alloc] initWithBytesNoCopy:tempNameBytes length:strlen(tempNameBytes) encoding:NSUTF8StringEncoding freeWhenDone:YES] autorelease];
+		time_t rawtime;
+		struct tm * timeinfo;
+		time ( &rawtime );
+		timeinfo = localtime ( &rawtime );
 		
-		[[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:[tempName stringByAppendingPathExtension:@"mov"]]
-											recordingDelegate:self];
+		NSString *path = [[NSString stringWithFormat:@"~/Desktop/%04d%02d%02d-%02d%02d%02d.mov",
+						   timeinfo->tm_year + 1900, timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec] stringByExpandingTildeInPath];
+		[[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:path] recordingDelegate:self];
 	} else {
 		[[self movieFileOutput] stopRecording];
 	}
@@ -491,19 +510,29 @@
 - (void)updateAudioLevels:(NSTimer *)timer
 {
 	NSInteger channelCount = 0;
-	float decibels = 0.f;
-	
-	// Sum all of the average power levels and divide by the number of channels
 	for (AVCaptureConnection *connection in [[self movieFileOutput] connections]) {
 		for (AVCaptureAudioChannel *audioChannel in [connection audioChannels]) {
-			decibels += [audioChannel averagePowerLevel];
+			float decibels = [audioChannel averagePowerLevel];
+			float peak = [audioChannel peakHoldLevel];
+			if (channelCount == 0)
+			{
+				[[self audioLevelMeterL] setFloatValue:(pow(10.f, 0.05f * decibels) * 20.0f)];
+				[[self audioLevelL] setStringValue:[NSString stringWithFormat:@"%.1f",decibels]];
+				if (peak > [[self audioPeakL] floatValue])
+					[[self audioPeakL] setStringValue:[NSString stringWithFormat:@"%.1f",peak]];
+				[[self audioWaveformL] appendAmplitude:decibels];
+			}
+			else if (channelCount == 1)
+			{
+				[[self audioLevelMeterR] setFloatValue:(pow(10.f, 0.05f * decibels) * 20.0f)];
+				[[self audioLevelR] setStringValue:[NSString stringWithFormat:@"%.1f",decibels]];
+				if (peak > [[self audioPeakR] floatValue])
+					[[self audioPeakR] setStringValue:[NSString stringWithFormat:@"%.1f",peak]];
+				[[self audioWaveformR] appendAmplitude:decibels];
+			}
 			channelCount += 1;
 		}
 	}
-	
-	decibels /= channelCount;
-	
-	[[self audioLevelMeter] setFloatValue:(pow(10.f, 0.05f * decibels) * 20.0f)];
 }
 
 #pragma mark - Transport Controls
@@ -612,26 +641,6 @@
 		dispatch_async(dispatch_get_main_queue(), ^(void) {
 			[self presentError:recordError];
 		});
-	} else {
-		// Move the recorded temporary file to a user-specified location
-		NSSavePanel *savePanel = [NSSavePanel savePanel];
-		[savePanel setAllowedFileTypes:[NSArray arrayWithObject:AVFileTypeQuickTimeMovie]];
-		[savePanel setCanSelectHiddenExtension:YES];
-		[savePanel beginSheetModalForWindow:[self windowForSheet] completionHandler:^(NSInteger result) {
-			NSError *error = nil;
-			if (result == NSOKButton) {
-				[[NSFileManager defaultManager] removeItemAtURL:[savePanel URL] error:nil]; // attempt to remove file at the desired save location before moving the recorded file to that location
-				if ([[NSFileManager defaultManager] moveItemAtURL:outputFileURL toURL:[savePanel URL] error:&error]) {
-					[[NSWorkspace sharedWorkspace] openURL:[savePanel URL]];
-				} else {
-					[savePanel orderOut:self];
-					[self presentError:error modalForWindow:[self windowForSheet] delegate:self didPresentSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:NULL];
-				}
-			} else {
-				// remove the temporary recording file if it's not being saved
-				[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
-			}
-		}];
 	}
 }
 
@@ -643,4 +652,13 @@
     return NO;
 }
 
+@end
+
+
+@implementation CustomTextField
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	[[self.doc audioPeakL] setFloatValue:-99];
+	[[self.doc audioPeakR] setFloatValue:-99];
+}
 @end

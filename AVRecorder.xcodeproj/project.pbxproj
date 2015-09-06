@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B1B83941B9CC5F300AEF9D0 /* WaveformView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B83931B9CC5F300AEF9D0 /* WaveformView.m */; };
+		2B9C6FFE1B8CCA290017778A /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B9C6FFD1B8CCA290017778A /* CoreMediaIO.framework */; };
 		2FC9301E139D85A500DA0D4F /* AVCaptureDeviceFormat_AVRecorderAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC9301D139D85A500DA0D4F /* AVCaptureDeviceFormat_AVRecorderAdditions.m */; };
 		2FC93021139D875D00DA0D4F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FC93020139D875D00DA0D4F /* CoreMedia.framework */; };
 		2FC93025139D8CC500DA0D4F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FC93024139D8CC500DA0D4F /* AudioToolbox.framework */; };
@@ -22,6 +24,9 @@
 
 /* Begin PBXFileReference section */
 		28CF708F1667DCB20091B82E /* Read Me.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Read Me.txt"; sourceTree = "<group>"; };
+		2B1B83921B9CC5F300AEF9D0 /* WaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaveformView.h; path = AVRecorder/WaveformView.h; sourceTree = "<group>"; };
+		2B1B83931B9CC5F300AEF9D0 /* WaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaveformView.m; path = AVRecorder/WaveformView.m; sourceTree = "<group>"; };
+		2B9C6FFD1B8CCA290017778A /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
 		2FC9301C139D85A500DA0D4F /* AVCaptureDeviceFormat_AVRecorderAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCaptureDeviceFormat_AVRecorderAdditions.h; sourceTree = "<group>"; };
 		2FC9301D139D85A500DA0D4F /* AVCaptureDeviceFormat_AVRecorderAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCaptureDeviceFormat_AVRecorderAdditions.m; sourceTree = "<group>"; };
 		2FC93020139D875D00DA0D4F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -46,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B9C6FFE1B8CCA290017778A /* CoreMediaIO.framework in Frameworks */,
 				E9C967F8137B51A700C6D18B /* AVFoundation.framework in Frameworks */,
 				2FC93025139D8CC500DA0D4F /* AudioToolbox.framework in Frameworks */,
 				E9C967D3137B516200C6D18B /* Cocoa.framework in Frameworks */,
@@ -59,6 +65,8 @@
 		E9C967C3137B516100C6D18B = {
 			isa = PBXGroup;
 			children = (
+				2B1B83921B9CC5F300AEF9D0 /* WaveformView.h */,
+				2B1B83931B9CC5F300AEF9D0 /* WaveformView.m */,
 				28CF708F1667DCB20091B82E /* Read Me.txt */,
 				E9C967D8137B516200C6D18B /* AVRecorder */,
 				E9C967D1137B516200C6D18B /* Frameworks */,
@@ -77,6 +85,7 @@
 		E9C967D1137B516200C6D18B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B9C6FFD1B8CCA290017778A /* CoreMediaIO.framework */,
 				2FC93024139D8CC500DA0D4F /* AudioToolbox.framework */,
 				E9C967F7137B51A700C6D18B /* AVFoundation.framework */,
 				E9C967D2137B516200C6D18B /* Cocoa.framework */,
@@ -138,7 +147,7 @@
 		E9C967C5137B516100C6D18B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0640;
 			};
 			buildConfigurationList = E9C967C8137B516100C6D18B /* Build configuration list for PBXProject "AVRecorder" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -175,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B1B83941B9CC5F300AEF9D0 /* WaveformView.m in Sources */,
 				E9C967DF137B516200C6D18B /* main.m in Sources */,
 				E9C967E6137B516200C6D18B /* AVRecorderDocument.m in Sources */,
 				2FC9301E139D85A500DA0D4F /* AVCaptureDeviceFormat_AVRecorderAdditions.m in Sources */,
@@ -216,15 +226,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -235,7 +250,9 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -247,21 +264,28 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;

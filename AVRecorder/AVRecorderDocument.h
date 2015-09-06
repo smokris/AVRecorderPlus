@@ -46,6 +46,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "WaveformView.h"
 
 @class AVCaptureVideoPreviewLayer;
 @class AVCaptureSession;
@@ -57,12 +58,18 @@
 @class AVCaptureDeviceFormat;
 @class AVFrameRateRange;
 
+@class AVRecorderDocument;
+@interface CustomTextField : NSTextField
+@property(strong) AVRecorderDocument *doc;
+@end
+
 @interface AVRecorderDocument : NSDocument
 {
 @private
 	NSView						*previewView;
 	AVCaptureVideoPreviewLayer	*previewLayer;
-	NSLevelIndicator			*audioLevelMeter;
+	NSLevelIndicator			*audioLevelMeterL;
+	NSLevelIndicator			*audioLevelMeterR;
 	
 	AVCaptureSession			*session;
 	AVCaptureDeviceInput		*videoDeviceInput;
@@ -99,7 +106,16 @@
 #pragma mark - Preview
 @property (assign) IBOutlet NSView *previewView;
 @property (assign) float previewVolume;
-@property (assign) IBOutlet NSLevelIndicator *audioLevelMeter;
+
+@property (assign) IBOutlet NSLevelIndicator *audioLevelMeterL;
+@property (assign) IBOutlet NSTextField      *audioLevelL;
+@property (assign) IBOutlet CustomTextField      *audioPeakL;
+@property (assign) IBOutlet WaveformView      *audioWaveformL;
+
+@property (assign) IBOutlet NSLevelIndicator *audioLevelMeterR;
+@property (assign) IBOutlet NSTextField      *audioLevelR;
+@property (assign) IBOutlet CustomTextField      *audioPeakR;
+@property (assign) IBOutlet WaveformView      *audioWaveformR;
 
 #pragma mark - Transport Controls
 @property (readonly,getter=isPlaying) BOOL playing;
