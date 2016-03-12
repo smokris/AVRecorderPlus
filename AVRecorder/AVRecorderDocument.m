@@ -100,18 +100,6 @@
 																	  [self presentError:[[note userInfo] objectForKey:AVCaptureSessionErrorKey]];
 																  });
 															  }];
-		id didStartRunningObserver = [notificationCenter addObserverForName:AVCaptureSessionDidStartRunningNotification
-																	 object:session
-																	  queue:[NSOperationQueue mainQueue]
-																 usingBlock:^(NSNotification *note) {
-																	 NSLog(@"did start running");
-																 }];
-		id didStopRunningObserver = [notificationCenter addObserverForName:AVCaptureSessionDidStopRunningNotification
-																	object:session
-																	 queue:[NSOperationQueue mainQueue]
-																usingBlock:^(NSNotification *note) {
-																	NSLog(@"did stop running");
-																}];
 		id deviceWasConnectedObserver = [notificationCenter addObserverForName:AVCaptureDeviceWasConnectedNotification
 																		object:nil
 																		 queue:[NSOperationQueue mainQueue]
@@ -124,8 +112,8 @@
 																	   usingBlock:^(NSNotification *note) {
 																		   [self refreshDevices];
 																	   }];
-		observers = [[NSArray alloc] initWithObjects:runtimeErrorObserver, didStartRunningObserver, didStopRunningObserver, deviceWasConnectedObserver, deviceWasDisconnectedObserver, nil];
-		
+		observers = [[NSArray alloc] initWithObjects:runtimeErrorObserver, deviceWasConnectedObserver, deviceWasDisconnectedObserver, nil];
+
 		// Attach outputs to session
 		movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
 		[movieFileOutput setDelegate:self];
