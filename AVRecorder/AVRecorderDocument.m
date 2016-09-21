@@ -448,7 +448,7 @@
 		timeinfo = localtime ( &rawtime );
 		
 		NSString *path = [[NSString stringWithFormat:@"~/Desktop/%04d%02d%02d-%02d%02d%02d.mov",
-						   timeinfo->tm_year + 1900, timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec] stringByExpandingTildeInPath];
+						   timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec] stringByExpandingTildeInPath];
 		[[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:path] recordingDelegate:self];
 	} else {
 		[[self movieFileOutput] stopRecording];
