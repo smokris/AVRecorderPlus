@@ -102,6 +102,8 @@
 @property (readonly) NSArray *availableSessionPresets;
 @property (readonly) BOOL hasRecordingDevice;
 @property (assign,getter=isRecording) BOOL recording;
+@property (assign) IBOutlet NSButton *recordButton;
+@property (assign) IBOutlet NSTextField *timestampLabel;
 
 #pragma mark - Preview
 @property (assign) IBOutlet NSView *previewView;

@@ -497,6 +497,14 @@
 
 - (void)updateAudioLevels:(NSTimer *)timer
 {
+	double timestamp = CMTimeGetSeconds(movieFileOutput.recordedDuration);
+	if (movieFileOutput.isRecording && !isnan(timestamp))
+	{
+		int minutes = timestamp / 60;
+		double seconds = timestamp - minutes * 60;
+		_timestampLabel.stringValue = [NSString stringWithFormat:@"%03d:%05.2f", minutes, seconds];
+	}
+
 	NSInteger channelCount = 0;
 	for (AVCaptureConnection *connection in [[self movieFileOutput] connections]) {
 		for (AVCaptureAudioChannel *audioChannel in [connection audioChannels]) {
@@ -602,7 +610,7 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
-	NSLog(@"Did start recording to %@", [fileURL description]);
+	_recordButton.title = @"Recording…";
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didPauseRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
@@ -624,6 +632,9 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)recordError
 {
+	_recordButton.title = @"Record";
+	_timestampLabel.stringValue = @"";
+
 	if (recordError != nil && [[[recordError userInfo] objectForKey:AVErrorRecordingSuccessfullyFinishedKey] boolValue] == NO) {
 		[[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
 		dispatch_async(dispatch_get_main_queue(), ^(void) {
