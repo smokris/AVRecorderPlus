@@ -18,7 +18,6 @@
                 <outlet property="audioWaveformR" destination="2s4-t1-pwc" id="nhT-9q-VNE"/>
                 <outlet property="previewView" destination="100261" id="100266"/>
                 <outlet property="recordButton" destination="77" id="1S5-hj-s45"/>
-                <outlet property="timestampField" destination="6Dj-2U-Hvq" id="sRt-zn-mUG"/>
                 <outlet property="timestampLabel" destination="6Dj-2U-Hvq" id="Djn-Lx-bOQ"/>
                 <outlet property="window" destination="5" id="18"/>
             </connections>
