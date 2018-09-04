@@ -1,0 +1,13 @@
+os: osx
+osx_image: xcode9.4
+language: objective-c
+compiler: clang
+script: xcodebuild -configuration Release
+deploy:
+  provider: releases
+  api_key:
+    secure: TpIS6GQd7pz5V3c1wZ7ib8IW9CySBvGab1VEakGeaz9R7vogFY7tUSaXBMO/1ihT6MBKFjxqGbbWmM0CZSYkOenmPs89Nsb2obpc+YvrjnJI1bWFT16Kjpk7+mGRI+jQkXa5n5B5z6mSFm3dIgYKilMZNHL9+0ebWhT9GDL1ImkyuKm7uhX82kj1tG4giUKmQpM8Tdbdksg+l/z6o9nEIgOApTEon62ryzExCtow7LS5mnJspYWqTK09rJZWf6Nan6gVxNuQT9d/lRQ62fWi6m5A96Kmt2cFqW9mzC9KZ6UhXPVgr36F8O8bWkRfG+c3Hgog6js2IpK7b9b7J2Q1WoviCHh2j3i8wYJV1zU3EiZ5u0VIRZ2jKZEdI0rP2Gfhd/TwyKtm6sgWm9j9GwHrcJiHlrUL9GwZwvD7sj42u4ydrSd1eHg4S20oKd+cDTvIp3hhjCsu1HZVgC51wNq4cW8sKq0gTr68IurK5xU0C/ExFAZr5ZAUEtjVy8XLjsJH0ErtYPIPXF9zLDxA96Hnp4n4t3I1yLoH2k+BI8g+RRM3TP5EzsIG/8qv+y5aBdbn/g77okqy8IFewV4yjA0/x2y0uYDIUtCPBfCk+C/vFgfybl3vEoM06IBAv2XncFbxTQ0VSvNsxW8xUUqWfcgq0KjnQFZQU3EfUJFcH8lYrCE=
+  file: build/Release/AVRecorder.app
+  skip_cleanup: true
+  on:
+    tags: true
