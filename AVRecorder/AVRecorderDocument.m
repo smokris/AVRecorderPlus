@@ -194,7 +194,7 @@
 	[[self session] startRunning];
 	
 	// Start updating the audio level meter
-	[self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:1./30. target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
+	[self setAudioLevelTimer:[NSTimer scheduledTimerWithTimeInterval:1./10. target:self selector:@selector(updateAudioLevels:) userInfo:nil repeats:YES]];
 	[[self audioPeakL] setFloatValue:-99];
 	[[self audioPeakR] setFloatValue:-99];
 	[self audioPeakL].doc = self;
