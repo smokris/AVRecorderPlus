@@ -23,7 +23,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		28CF708F1667DCB20091B82E /* Read Me.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Read Me.txt"; sourceTree = "<group>"; };
 		2B1B83921B9CC5F300AEF9D0 /* WaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaveformView.h; path = AVRecorder/WaveformView.h; sourceTree = "<group>"; };
 		2B1B83931B9CC5F300AEF9D0 /* WaveformView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WaveformView.m; path = AVRecorder/WaveformView.m; sourceTree = "<group>"; };
 		2B9C6FFD1B8CCA290017778A /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
@@ -67,7 +66,6 @@
 			children = (
 				2B1B83921B9CC5F300AEF9D0 /* WaveformView.h */,
 				2B1B83931B9CC5F300AEF9D0 /* WaveformView.m */,
-				28CF708F1667DCB20091B82E /* Read Me.txt */,
 				E9C967D8137B516200C6D18B /* AVRecorder */,
 				E9C967D1137B516200C6D18B /* Frameworks */,
 				E9C967CF137B516200C6D18B /* Products */,
