@@ -1,11 +1,3 @@
-//
-//  WaveformView.m
-//  AVRecorder
-//
-//  Created by Steve Mokris on 9/6/15.
-//
-//
-
 #import "WaveformView.h"
 
 @implementation WaveformView
