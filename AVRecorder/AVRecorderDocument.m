@@ -117,6 +117,7 @@
 		// Attach outputs to session
 		movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
 		[movieFileOutput setDelegate:self];
+		movieFileOutput.movieFragmentInterval = CMTimeMake(10, 1);
 		[session addOutput:movieFileOutput];
 		
 		audioPreviewOutput = [[AVCaptureAudioPreviewOutput alloc] init];
