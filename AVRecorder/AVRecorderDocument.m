@@ -13,6 +13,7 @@
 @property (retain) AVCaptureVideoPreviewLayer *previewLayer;
 @property (assign) NSTimer *audioLevelTimer;
 @property (retain) NSArray *observers;
+@property BOOL userRequestedStop;
 
 // Methods for internal use
 - (void)refreshDevices;
@@ -404,8 +405,10 @@
 		NSString *path = [[NSString stringWithFormat:@"~/Desktop/%04d%02d%02d-%02d%02d%02d.mov",
 						   timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec] stringByExpandingTildeInPath];
 		[[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:path] recordingDelegate:self];
+		_userRequestedStop = NO;
 	} else {
 		[[self movieFileOutput] stopRecording];
+		_userRequestedStop = YES;
 	}
 }
 
@@ -569,19 +572,18 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didPauseRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
-	NSLog(@"Did pause recording to %@", [fileURL description]);
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didResumeRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
-	NSLog(@"Did resume recording to %@", [fileURL description]);
 }
 
-- (void)captureOutput:(AVCaptureFileOutput *)captureOutput willFinishRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections dueToError:(NSError *)error
+- (void)captureOutput:(AVCaptureFileOutput *)captureOutput willFinishRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-	dispatch_async(dispatch_get_main_queue(), ^(void) {
-		[self presentError:error];
-	});
+	if (error && ![error.localizedFailureReason containsString:@"maximum allowable length"])
+		dispatch_async(dispatch_get_main_queue(), ^(void) {
+			[self presentError:error];
+		});
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)recordError
@@ -594,6 +596,12 @@
 		dispatch_async(dispatch_get_main_queue(), ^(void) {
 			[self presentError:recordError];
 		});
+	}
+
+	if (!_userRequestedStop)
+	{
+		NSLog(@"Warning: Recording unexpectedly stopped.  Resuming.");
+		[self setRecording:YES];
 	}
 }
 
